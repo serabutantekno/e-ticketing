@@ -3,16 +3,11 @@ const express = require('express')
 const app = express()
 const port = 3000
 
-const { authorization, jwt } = require('./src/middlewares')
-const userController = require('./src/controllers/controllers')
+const routes = require('./src/routes/routes')
 
 
 app.use(express.json())
-
-
-app.post('/api/auth/register', userController.register)
-app.post('/api/auth/login', userController.login)
-app.get('/api/users/:id', [jwt, authorization('admin')], userController.getUserById)
+app.use('/', routes)
 
 
 app.listen(port, () => {
