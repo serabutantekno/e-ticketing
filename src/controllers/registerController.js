@@ -1,11 +1,16 @@
+const jwt = require('jsonwebtoken')
 const { User } = require('../db/models')
+const bcrypt = require('bcrypt')
 
 
 class userController {
 
   static async register(req, res) {
     try {
-      const data = await User.create(req.body)
+      const hashedPassword = bcrypt.hashSync(req.body['password'], 8)
+      const data = await User.create(
+        Object.assign(req.body, { password: hashedPassword })
+      )
       res.json(data)
     } catch (error) {
       console.log(error)
