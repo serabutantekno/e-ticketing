@@ -28,9 +28,15 @@ class userController {
         }
       })
       if (currentUser) {
-        const passwordCheck = await bcrypt.compare(req.body['password'], currentUser.password)
+        const passwordCheck = await bcrypt.compare(req.body.password, currentUser.password)
         if (passwordCheck) {
-          const token = jwt.sign({ user: currentUser.username }, process.env.TOKEN_SECRET, { expiresIn: '1m' })  // expire in 8 hours
+          const payload = JSON.parse(JSON.stringify(currentUser))
+
+          delete payload.password
+          delete payload.createdAt
+          delete payload.updatedAt
+
+          const token = jwt.sign(payload, process.env.TOKEN_SECRET, { expiresIn: '2h' })  // expire in specific time
           res.status(200).json(token)
         } else {
           res.status(400).json({ message: 'invalid password' })

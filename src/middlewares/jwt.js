@@ -8,14 +8,18 @@ function authenticateToken(req, res, next) {
 
     jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
       if (err) {
-        return res.sendStatus(403)
+        return res.status(403).json({
+          message: err.message
+        })
       }
 
-      req.user = user
+      req.user = JSON.parse(JSON.stringify(user))
       next()
     })
   } else {
-    res.sendStatus(401)
+    res.status(401).json({
+      message: 'token missing'
+    })
   }
 }
 
