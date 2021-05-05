@@ -7,6 +7,7 @@ const router = express.Router()
 // API Endpoints
 router.post('/api/auth/register', registerController.register)
 router.post('/api/auth/login', registerController.login)
+router.get('/auth/verify/:token', registerController.verify)
 
 router.get('/api/profile', jwt, authorization('admin', 'participant'), userController.getProfile)
 router.put('/api/profile', jwt, authorization('admin'), userController.updateProfile)
