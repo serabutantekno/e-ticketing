@@ -19,7 +19,7 @@ function generateAccessToken(username) {
 
 app.post('/api/auth/register', userController.register)
 app.post('/api/auth/login', userController.login)
-app.get('/api/users/:id', userController.getUserById)
+app.get('/api/users/:id', middlewares, userController.getUserById)
 
 
 app.post('/api/createNewUser', (req, res) => {
