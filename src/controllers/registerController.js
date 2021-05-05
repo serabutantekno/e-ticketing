@@ -47,7 +47,9 @@ class registerController {
           username: req.body.username
         }
       })
-      if (currentUser.confirmed_at) {
+      if (currentUser.confirmed_at || currentUser.role === 'admin') {
+        if (currentUser.deleted_at) return res.json({ message: 'this account has been deleted' })
+
         const passwordCheck = await bcrypt.compare(req.body.password, currentUser.password)
         if (passwordCheck) {
           const payload = JSON.parse(JSON.stringify(currentUser))
