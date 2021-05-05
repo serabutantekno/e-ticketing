@@ -51,6 +51,14 @@ class userController {
     }
   }
 
+  static async getUser(req) {
+    return await User.findOne({
+      where: {
+        id: req.user.id
+      }
+    })
+  }
+
   static async updateUserById(req, res) {
     try {
       const user = await User.findOne({
@@ -68,6 +76,36 @@ class userController {
           sucess: true,
           message: 'success updating user',
           data: user
+        })
+      } else {
+        res.json({
+          sucess: false,
+          message: 'updating user fails',
+          data: null
+        })
+      }
+    } catch (err) {
+      console.log(err)
+      res.json({
+        sucess: false,
+        message: err.message,
+        data: null
+      })
+    }
+  }
+
+  static async updateProfile(req, res) {
+    try {
+      if (await userController.getUser(req)) {
+        const data = await User.update(req.body, {
+          where: {
+            id: req.user.id
+          }
+        })
+        res.json({
+          sucess: true,
+          message: 'success updating user',
+          data: await userController.getUser(req)
         })
       } else {
         res.json({
