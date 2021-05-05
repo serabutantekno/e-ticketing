@@ -12,6 +12,23 @@ class userController {
     })
   }
 
+  static async deleteProfile(req, res) {
+    const user = await userController.getUser(req.user.id)
+    const user_update = await user.update({ deleted_at: new Date() })
+
+    console.log(user_update.deleted_at)
+    console.log(req.user)
+    req.user.deleted_at = String(user_update.deleted_at)
+
+    Object.assign(req.user, { deleted_at: user_update.deleted_at })
+
+    res.json({
+      sucess: true,
+      message: 'delete data success',
+      data: user_update
+    })
+  }
+
   static async getUsers(req, res, next) {
     const users = await User.findAll()
     if (users) {

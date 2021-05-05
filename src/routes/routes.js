@@ -11,6 +11,7 @@ router.get('/auth/verify/:token', registerController.verify)
 
 router.get('/api/profile', jwt, authorization('admin', 'participant'), userController.getProfile)
 router.put('/api/profile', jwt, authorization('admin'), userController.updateProfile)
+router.post('/api/profile/delete', jwt, authorization('creator', 'participant'), userController.deleteProfile)
 
 router.post('/api/users', jwt, authorization('admin'), registerController.register)
 router.get('/api/users', [jwt, authorization('admin')], userController.getUsers)

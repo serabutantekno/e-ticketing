@@ -14,6 +14,7 @@ function authenticateToken(req, res, next) {
       }
 
       req.user = JSON.parse(JSON.stringify(user))
+      console.log(req.user)
       next()
     })
   } else {
