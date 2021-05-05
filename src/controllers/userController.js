@@ -7,13 +7,25 @@ class userController {
     try {
       const data = await User.findByPk(req.params['id'])
       if (data) {
-        res.json(data)
+        res.json({
+          sucess: true,
+          message: 'success retrieving data',
+          data: data
+        })
       } else {
-        res.json({'message': 'id not found'})
+        res.json({
+          sucess: false,
+          message: 'id not found',
+          data: data
+        })
       }
     } catch (error) {
       console.log(error)
-      res.json({'message': 'something wrong'})
+      res.json({
+          sucess: false,
+          message: 'something wrong',
+          data: data
+        })
     } finally {
       next()
     }
