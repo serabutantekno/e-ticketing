@@ -51,23 +51,18 @@ class userController {
     }
   }
 
-  static async getUser(req) {
+  static async getUser(id) {
     return await User.findOne({
       where: {
-        id: req.user.id
+        id: id
       }
     })
   }
 
   static async updateUserById(req, res) {
     try {
-      const user = await User.findOne({
-        where: {
-          id: req.params.id
-        }
-      })
-      if (user) {
-        const data = await User.update(req.body, {
+      if (await userController.getUser(req.params.id)) {
+        await User.update(req.body, {
           where: {
             id: req.params.id
           }
@@ -75,7 +70,7 @@ class userController {
         res.json({
           sucess: true,
           message: 'success updating user',
-          data: user
+          data: await userController.getUser(req.params.id)
         })
       } else {
         res.json({
@@ -96,7 +91,7 @@ class userController {
 
   static async updateProfile(req, res) {
     try {
-      if (await userController.getUser(req)) {
+      if (await userController.getUser(req.user.id)) {
         const data = await User.update(req.body, {
           where: {
             id: req.user.id
@@ -105,7 +100,7 @@ class userController {
         res.json({
           sucess: true,
           message: 'success updating user',
-          data: await userController.getUser(req)
+          data: await userController.getUser(req.user.id)
         })
       } else {
         res.json({
