@@ -3,6 +3,15 @@ const { User } = require('../db/models')
 
 class userController {
 
+  static async getProfile(req, res) {
+    const { iat, exp, deleted_at, ...data } = req.user
+    res.json({
+      sucess: true,
+      message: 'success retrieving data',
+      data: data
+    })
+  }
+
   static async getUsers(req, res, next) {
     const users = await User.findAll()
     if (users) {
