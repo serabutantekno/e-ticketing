@@ -6,6 +6,7 @@ const app = express()
 const port = 3000
 
 const middlewares = require('./src/middlewares/middlewares')
+const userController = require('./src/controllers/controllers')
 
 
 app.use(express.json())
@@ -14,6 +15,9 @@ app.use(express.json())
 function generateAccessToken(username) {
   return jwt.sign(username, process.env.TOKEN_SECRET, { expiresIn: '60s' });
 }
+
+
+app.post('/api/auth/register', userController.register)
 
 
 app.post('/api/createNewUser', (req, res) => {
