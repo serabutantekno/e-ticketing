@@ -2,9 +2,10 @@ const nodemailer = require('nodemailer')
 
 
 const sendMail = (email, uniqueString) => {
+  console.log(process.env.EMAIL_VERIFICATION_HOST)
   let transport = nodemailer.createTransport({
-    host: "smtp.mailtrap.io",
-    port: 2525,
+    host: process.env.EMAIL_VERIFICATION_HOST,
+    port: process.env.EMAIL_VERIFICATION_PORT,
     auth: {
       user: process.env.EMAIL_VERIFICATION_ADDRESS,
       pass: process.env.EMAIL_VERIFICATION_PASSWORD
