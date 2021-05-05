@@ -3,7 +3,7 @@ const { User } = require('../db/models')
 
 class userController {
 
-  static async getUserById(req, res) {
+  static async getUserById(req, res, next) {
     try {
       const data = await User.findByPk(req.params['id'])
       if (data) {
@@ -14,6 +14,8 @@ class userController {
     } catch (error) {
       console.log(error)
       res.json({'message': 'something wrong'})
+    } finally {
+      next()
     }
   }
 
