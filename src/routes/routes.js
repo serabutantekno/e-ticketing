@@ -11,6 +11,7 @@ router.post('/api/auth/login', registerController.login)
 router.get('/api/profile', jwt, authorization('admin', 'participant'), userController.getProfile)
 router.put('/api/profile', jwt, authorization('admin'), userController.updateProfile)
 
+router.post('/api/users', jwt, authorization('admin'), registerController.register)
 router.get('/api/users', [jwt, authorization('admin')], userController.getUsers)
 router.get('/api/users/:id', [jwt, authorization('admin')], userController.getUserById, afterMiddleware)
 router.put('/api/users/:id', jwt, authorization('admin'), userController.updateUserById)
