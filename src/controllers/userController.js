@@ -14,11 +14,12 @@ class userController {
   }
 
   static async getProfile(req, res) {
-    const { iat, exp, deleted_at, ...data } = req.user
+    console.log(req.user.password)
+    const user = await userController.getUser(req.user.id)
     res.json({
       sucess: true,
       message: 'success retrieving data',
-      data: data
+      data: user
     })
   }
 
