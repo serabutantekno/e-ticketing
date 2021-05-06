@@ -2,6 +2,8 @@ const { registerController, userController } = require('../controllers')
 const { afterMiddleware, authorization, jwt } = require('../middlewares')
 const express = require('express')
 const router = express.Router()
+const multer = require('multer')
+const upload = multer({ dest: 'src/uploads' })
 
 
 // API Endpoints
@@ -11,6 +13,7 @@ router.get('/auth/verify/:token', registerController.verify)
 
 router.get('/api/profile', jwt, authorization('admin', 'participant'), userController.getProfile)
 router.put('/api/profile', jwt, authorization('admin'), userController.updateProfile)
+router.post('/api/profile/photo', jwt, upload.single('photo'), userController.photoUpload)
 router.post('/api/profile/delete', jwt, authorization('creator', 'participant'), userController.deleteProfile)
 
 router.post('/api/users', jwt, authorization('admin'), registerController.register)

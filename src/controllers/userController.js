@@ -3,6 +3,16 @@ const { User } = require('../db/models')
 
 class userController {
 
+  static async photoUpload(req, res) {
+    const user = await userController.getUser(req.user.id)
+    user.update({ photo: req.file.filename })
+    res.json({
+      sucess: true,
+      message: 'photo uploaded',
+      data: await userController.getUser(req.user.id)
+    })
+  }
+
   static async getProfile(req, res) {
     const { iat, exp, deleted_at, ...data } = req.user
     res.json({
