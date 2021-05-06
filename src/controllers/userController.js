@@ -4,23 +4,33 @@ const { User } = require('../db/models')
 class userController {
 
   static async photoUpload(req, res) {
-    const user = await userController.getUser(req.user.id)
-    user.update({ photo: req.file.filename })
-    res.json({
-      sucess: true,
-      message: 'photo uploaded',
-      data: await userController.getUser(req.user.id)
+    const update = await User.update({ photo: req.file.filename }, {
+      where: {
+        id: req.user.id
+      }
     })
+    console.log(update)
+    if(update[0]) {
+      res.json({
+        sucess: true,
+        message: 'photo uploaded',
+        data: await userController.getUser(req.user.id)
+      })
+    }
   }
 
-  static async getProfile(req, res) {
+  static async getProfile(req, res, next) {
     console.log(req.user.password)
-    const user = await userController.getUser(req.user.id)
-    res.json({
-      sucess: true,
-      message: 'success retrieving data',
-      data: user
-    })
+    try {
+      const user = await userController.getUser(req.user.avatar)
+      res.json({
+        sucess: true,
+        message: 'success retrieving data',
+        data: user
+      })
+    } catch (err) {
+      next(err)
+    }
   }
 
   static async deleteProfile(req, res) {

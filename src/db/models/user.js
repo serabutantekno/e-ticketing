@@ -14,17 +14,26 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   User.init({
-    username: DataTypes.STRING,
+    username: {
+      type: DataTypes.STRING,
+      unique: true
+    },
     fullname: DataTypes.STRING,
     email: DataTypes.STRING,
     password: DataTypes.STRING,
     photo: DataTypes.STRING,
     role: DataTypes.ENUM('admin', 'creator', 'participant'),
-    deleted_at: DataTypes.DATE,
+    // deleted_at: DataTypes.DATE,
+    deletedAt: {
+      field: 'deleted_at',
+      // DataTypes: DataTypes.DATE
+      type: DataTypes.DATE
+    },
     confirmed_at: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'User',
+    paranoid: true
   });
   return User;
 };

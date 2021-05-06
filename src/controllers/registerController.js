@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt')
 
 class registerController {
 
-  static async register(req, res) {
+  static async register(req, res, next) {
     try {
       const salt = await bcrypt.genSalt(10)
       const hashedPassword = await bcrypt.hash(req.body['password'], salt)
@@ -19,7 +19,7 @@ class registerController {
       res.json(data)
     } catch (error) {
       console.log(error)
-      res.json({'message': 'something wrong'})
+      next(error)
     }
   }
 
@@ -29,14 +29,17 @@ class registerController {
     const [id, email] = base64data_decode.split(':')
     const user = await userController.getUser(id)
     if (user && user.email === email) {
-      user.update({ confirmed_at: new Date })
-      res.json({
-        sucess: true,
-        message: 'your account is verified',
-        data: user
-      })
+      try {
+        user.update({ confirmed_at: new Date })
+        res.json({
+          sucess: true,
+          message: 'your account is verified',
+          data: user
+        })
+      } catch (err) {
+        console.log(err)
+      }
     }
-    next()
   }
 
 
