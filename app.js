@@ -1,4 +1,5 @@
-require('dotenv').config()  // get environment variables
+const helper = require('./src/helpers')
+require('dotenv').config({ path: helper.fileExists('.env_secret') })  // get environment variables
 const express = require('express')
 const app = express()
 const port = 3000
