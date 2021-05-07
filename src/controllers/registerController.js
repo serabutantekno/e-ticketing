@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const { User } = require('../db/models')
+const { BaseResponse } = require('../helpers')
 const sendMail = require('./sendMailController')
 const userController = require('./userController')
 const bcrypt = require('bcrypt')
@@ -62,7 +63,7 @@ class registerController {
           delete payload.updatedAt
 
           const token = jwt.sign(payload, process.env.TOKEN_SECRET, { expiresIn: '2h' })  // expire in specific time
-          res.status(200).json(token)
+          res.status(200).json(BaseResponse.success(currentUser, 'Login succeed.', { token: token }))
         } else {
           res.status(400).json({ message: 'invalid password' })
         }

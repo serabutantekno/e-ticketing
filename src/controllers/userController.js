@@ -1,4 +1,5 @@
 const { User } = require('../db/models')
+const { BaseResponse } = require('../helpers')
 
 
 class userController {
@@ -9,25 +10,14 @@ class userController {
         id: req.user.id
       }
     })
-    console.log(update)
     if(update[0]) {
-      res.json({
-        sucess: true,
-        message: 'photo uploaded',
-        data: await userController.getUser(req.user.id)
-      })
+      res.json(BaseResponse.success(await userController.getUser(req.user.id), 'Photo uploaded successfully.'))
     }
   }
 
   static async getProfile(req, res, next) {
-    console.log(req.user.password)
     try {
-      const user = await userController.getUser(req.user.avatar)
-      res.json({
-        sucess: true,
-        message: 'success retrieving data',
-        data: user
-      })
+      res.json(BaseResponse.success(await userController.getUser(req.user.id), 'User profile retrieved successfully.'))
     } catch (err) {
       next(err)
     }
@@ -37,27 +27,17 @@ class userController {
     const user = await userController.getUser(req.user.id)
     const user_update = await user.update({ deleted_at: new Date() })
 
-    console.log(user_update.deleted_at)
-    console.log(req.user)
     req.user.deleted_at = String(user_update.deleted_at)
 
     Object.assign(req.user, { deleted_at: user_update.deleted_at })
 
-    res.json({
-      sucess: true,
-      message: 'delete data success',
-      data: user_update
-    })
+    res.json(BaseResponse.success(await userController.getUser(req.user.id), 'User deleted successfully.'))
   }
 
-  static async getUsers(req, res, next) {
+  static async getUsers(req, res) {
     const users = await User.findAll()
     if (users) {
-      res.json({
-        sucess: true,
-        message: 'success retrieving data',
-        data: users
-      })
+      res.json(BaseResponse.success(users, 'All user data retrieved successfully.'))
     }
   }
 
@@ -65,11 +45,7 @@ class userController {
     try {
       const data = await User.findByPk(req.params['id'])
       if (data) {
-        res.json({
-          sucess: true,
-          message: 'success retrieving data',
-          data: data
-        })
+        res.json(BaseResponse.success(data, 'User data retrieved successfully.'))
       } else {
         res.json({
           sucess: false,
@@ -105,11 +81,7 @@ class userController {
             id: req.params.id
           }
         })
-        res.json({
-          sucess: true,
-          message: 'success updating user',
-          data: await userController.getUser(req.params.id)
-        })
+        res.json(BaseResponse.success(await userController.getUser(req.params.id), 'User data updated successfully.'))
       } else {
         res.json({
           sucess: false,
@@ -135,11 +107,7 @@ class userController {
             id: req.user.id
           }
         })
-        res.json({
-          sucess: true,
-          message: 'success updating user',
-          data: await userController.getUser(req.user.id)
-        })
+        res.json(BaseResponse.success(await userController.getUser(req.user.id), 'User data updated successfully.'))
       } else {
         res.json({
           sucess: false,
