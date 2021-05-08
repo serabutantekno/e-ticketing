@@ -1,5 +1,5 @@
 const { registerController, userController } = require('../controllers')
-const { afterMiddleware, authorization, jwt } = require('../middlewares')
+const { authorization, jwt } = require('../middlewares')
 const express = require('express')
 const router = express.Router()
 const multer = require('multer')
@@ -18,7 +18,7 @@ router.post('/api/profile/delete', jwt, authorization('creator', 'participant'),
 
 router.post('/api/users', jwt, authorization('admin'), registerController.register)
 router.get('/api/users', [jwt, authorization('admin')], userController.getUsers)
-router.get('/api/users/:id', [jwt, authorization('admin')], userController.getUserById, afterMiddleware)
+router.get('/api/users/:id', [jwt, authorization('admin')], userController.getUserById)
 router.put('/api/users/:id', jwt, authorization('admin'), userController.updateUserById)
 
 
