@@ -7,8 +7,8 @@ const upload = multer({ dest: 'src/uploads' })
 
 
 // API Endpoints
-router.post('/api/auth/register', RequestValidator.registerSchema, registerController.register)
-router.post('/api/auth/login', registerController.login)
+router.post('/api/auth/register', RequestValidator.register, registerController.register)
+router.post('/api/auth/login', RequestValidator.login, registerController.login)
 router.get('/auth/verify/:token', registerController.verify)
 
 router.get('/api/profile', jwt, authorization('admin', 'participant'), userController.getProfile)
