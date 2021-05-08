@@ -1,5 +1,6 @@
 const { User } = require('../db/models')
 const { BaseResponse } = require('../helpers')
+const TemplateData = require('./templateData')
 
 
 class userController {
@@ -11,13 +12,13 @@ class userController {
       }
     })
     if(update[0]) {
-      res.json(BaseResponse.success(await userController.getUser(req.user.id), 'Photo uploaded successfully.'))
+      res.json(BaseResponse.success(TemplateData.userData(await userController.getUser(req.user.id)), 'Photo uploaded successfully.'))
     }
   }
 
   static async getProfile(req, res, next) {
     try {
-      res.json(BaseResponse.success(await userController.getUser(req.user.id), 'User profile retrieved successfully.'))
+      res.json(BaseResponse.success(TemplateData.userData(await userController.getUser(req.user.id)), 'User profile retrieved successfully.'))
     } catch (err) {
       next(err)
     }
@@ -31,13 +32,14 @@ class userController {
 
     Object.assign(req.user, { deleted_at: user_update.deleted_at })
 
-    res.json(BaseResponse.success(await userController.getUser(req.user.id), 'User deleted successfully.'))
+    res.json(BaseResponse.success(TemplateData.userData(await userController.getUser(req.user.id)), 'User deleted successfully.'))
   }
 
   static async getUsers(req, res) {
     const users = await User.findAll()
+    // console.log(users)
     if (users) {
-      res.json(BaseResponse.success(users, 'All user data retrieved successfully.'))
+      res.json(BaseResponse.success(TemplateData.userData(users, {hey:'ho'}), 'All user data retrieved successfully.'))
     }
   }
 

@@ -3,6 +3,7 @@ const { User } = require('../db/models')
 const { BaseResponse } = require('../helpers')
 const sendMail = require('./sendMailController')
 const userController = require('./userController')
+const TemplateData = require('./templateData')
 const bcrypt = require('bcrypt')
 
 
@@ -17,7 +18,7 @@ class registerController {
       )
       const base64data_encode = Buffer.from((data.id + ':' + data.email), 'utf8').toString('base64')
       sendMail(data.email, base64data_encode)
-      res.json(data)
+      res.json(BaseResponse.success(TemplateData.userData(data), 'User registered.'))
     } catch (error) {
       console.log(error)
       next(error)
@@ -63,7 +64,7 @@ class registerController {
           delete payload.updatedAt
 
           const token = jwt.sign(payload, process.env.TOKEN_SECRET, { expiresIn: '2h' })  // expire in specific time
-          res.status(200).json(BaseResponse.success(currentUser, 'Login succeed.', { token: token }))
+          res.status(200).json(BaseResponse.success(TemplateData.userData(currentUser, { token: token }), 'Login succeed.'))
         } else {
           res.status(400).json({ message: 'invalid password' })
         }
