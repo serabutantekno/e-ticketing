@@ -1,4 +1,7 @@
 'use strict';
+
+const Event = require('./event')
+
 const {
   Model
 } = require('sequelize');
@@ -11,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      User.hasMany(models.Event, { foreignKey: 'creator_id' })
     }
   };
   User.init({
@@ -23,10 +27,8 @@ module.exports = (sequelize, DataTypes) => {
     password: DataTypes.STRING,
     photo: DataTypes.STRING,
     role: DataTypes.ENUM('admin', 'creator', 'participant'),
-    // deleted_at: DataTypes.DATE,
     deletedAt: {
       field: 'deleted_at',
-      // DataTypes: DataTypes.DATE
       type: DataTypes.DATE
     },
     confirmed_at: DataTypes.DATE
