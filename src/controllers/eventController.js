@@ -39,6 +39,19 @@ class eventController {
     }
   }
 
+  static async updateEvent(req, res, next) {
+    try {
+      await Event.update(req.body, {
+        where: {
+          id: req.params.id
+        }
+      })
+      res.json(BaseResponse.success(await Event.findByPk(req.params.id), 'Event with ID = ' + req.params.id + ' updated successfully.'))
+    } catch (error) {
+      next(error)
+    }
+  }
+
 }
 
 
