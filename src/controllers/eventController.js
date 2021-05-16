@@ -15,6 +15,17 @@ class eventController {
     }
   }
 
+  static async getEventById(req, res, next) {
+    try {
+      const event = await Event.findByPk(req.params.id)
+      if (event) {
+        res.json(BaseResponse.success(event, 'An event with ID = ' + req.params.id + ' retrieved successfully.'))
+      }
+    } catch (error) {
+      next(error)
+    }
+  }
+
   static async createEvent(req, res, next) {
     try {
       const newEvent = await Event.create(

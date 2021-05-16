@@ -21,8 +21,9 @@ router.get('/api/users', [jwt, authorization('admin')], userController.getUsers)
 router.get('/api/users/:id', [jwt, authorization('admin')], userController.getUserById)
 router.put('/api/users/:id', jwt, authorization('admin'), userController.updateUserById)
 
-router.get('/api/events', eventController.getEvents)
+router.get('/api/events', jwt, eventController.getEvents)
 router.post('/api/events', jwt, authorization('creator'), RequestValidator.createEvent, eventController.createEvent)
+router.get('/api/events/:id', jwt, authorization('admin', 'creator', 'participant'), eventController.getEventById)
 
 
 module.exports = router
