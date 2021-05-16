@@ -9,12 +9,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       creator_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'Users',
-          key: 'id'
-        }
+        type: Sequelize.INTEGER
       },
       title_event: {
         type: Sequelize.STRING
@@ -46,11 +41,11 @@ module.exports = {
       deleted_at: {
         type: Sequelize.DATE
       },
-      created_at: {
+      createdAt: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updated_at: {
+      updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
       }

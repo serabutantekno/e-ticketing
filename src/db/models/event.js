@@ -1,7 +1,4 @@
 'use strict';
-
-const User = require('./user')
-
 const {
   Model
 } = require('sequelize');
@@ -14,7 +11,6 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Event.belongsTo(models.User)
     }
   };
   Event.init({
@@ -32,7 +28,6 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Event',
-    underscored: true,
   });
   return Event;
 };

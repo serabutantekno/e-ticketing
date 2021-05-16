@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       User.hasMany(models.Event, { foreignKey: 'creator_id' })
+      models.Event.belongsTo(models.User, { through: 'creator_id', foreignKey: 'id' })
     }
   };
   User.init({
@@ -35,6 +36,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'User',
+    // underscored: true,
+    // freezeTableName: 'User',
     paranoid: true
   });
   return User;

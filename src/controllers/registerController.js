@@ -33,11 +33,7 @@ class registerController {
     if (user && user.email === email) {
       try {
         user.update({ confirmed_at: new Date })
-        res.json({
-          sucess: true,
-          message: 'your account is verified',
-          data: user
-        })
+        res.json(BaseResponse.success(TemplateData.userData(user), 'User registered.'))
       } catch (err) {
         console.log(err)
       }
