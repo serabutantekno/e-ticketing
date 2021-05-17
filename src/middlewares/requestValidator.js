@@ -6,22 +6,22 @@ class RequestValidator {
 
   /** Auth */
   static register(req, res, next) {
-    const schema = Joi.object({
-      username: Joi.string().required(),
-      fullname: Joi.string(),
-      email: Joi.string().email().required(),
-      password: Joi.string().min(5).required(),
-      role: Joi.string().valid('admin', 'creator', 'user').required()
+    return Joi.object({
+        username: Joi.string().required(),
+        fullname: Joi.string(),
+        email: Joi.string().email().required(),
+        password: Joi.string().min(5).required(),
+        role: Joi.string().valid('admin', 'creator', 'participant').required()
     })
-    validateRequest(req, next, schema)
+    // validateRequest(req, next, schema)
   }
 
-  static login(req, res, next) {
-    const schema = Joi.object({
+  static login() {
+    return Joi.object({
       username: Joi.string().required(),
       password: Joi.string().required(),
     })
-    validateRequest(req, next, schema)
+    // validateRequest(req, next, schema)
   }
 
 

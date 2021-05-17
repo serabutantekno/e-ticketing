@@ -1,15 +1,35 @@
 const { Event } = require('../db/models')
 const { BaseResponse } = require('../helpers')
-const { success } = require('../helpers/baseResponse')
 
 
 class eventController {
 
   static async getEvents(req, res, next) {
     try {
-      const events = await Event.findAll()
-      if (events) {
-        res.json(BaseResponse.success(events, 'All events retrieved successfully.'))
+      if (req.user.role === 'admin') {
+        const events = await Event.findAll()
+        if (events) {
+          res.json(BaseResponse.success(events, 'All events retrieved successfully.'))
+        }
+
+      } else if (req.user.role === 'creator') {
+        const events = await Event.findAll({
+          where: {
+            creator_id: req.user.id
+          }
+        })
+        if (events) {
+          res.json(BaseResponse.success(events, 'All events retrieved successfully.'))
+        }
+      } else if (req.user.role === 'participant') {
+        const events = await Event.findAll({
+          where: {
+            status: 'release'
+          }
+        })
+        if (events) {
+          res.json(BaseResponse.success(events, 'All events retrieved successfully.'))
+        }
       }
     } catch (error) {
       next(error)

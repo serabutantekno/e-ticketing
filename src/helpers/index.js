@@ -1,10 +1,11 @@
 const BaseResponse = require('./baseResponse')
 const fileExists = require('./fileExists')
-const requestValidator = require('./requestValidator')
+const { validateRequest, validateRequestB } = require('./requestValidator')
 
 
 module.exports = {
   BaseResponse,
   fileExists,
-  requestValidator
+  validateRequest,
+  validateRequestB,
 }

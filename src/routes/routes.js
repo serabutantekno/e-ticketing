@@ -3,12 +3,13 @@ const { authorization, jwt, RequestValidator } = require('../middlewares')
 const express = require('express')
 const router = express.Router()
 const multer = require('multer')
+const { validateRequest, validateRequestB } = require('../helpers')
 const upload = multer({ dest: 'src/uploads' })
 
 
 // API Endpoints
-router.post('/api/auth/register', RequestValidator.register, registerController.register)
-router.post('/api/auth/login', RequestValidator.login, registerController.login)
+router.post('/api/auth/register', validateRequestB(RequestValidator.register()), registerController.register)
+router.post('/api/auth/login', validateRequestB(RequestValidator.login()), registerController.login)
 router.get('/auth/verify/:token', registerController.verify)
 
 router.get('/api/profile', jwt, authorization('admin', 'creator', 'participant'), userController.getProfile)
