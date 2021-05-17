@@ -1,4 +1,4 @@
-const { registerController, userController, eventController } = require('../controllers')
+const { registerController, userController, eventController, paymentController } = require('../controllers')
 const { authorization, jwt, RequestValidator } = require('../middlewares')
 const express = require('express')
 const router = express.Router()
@@ -26,6 +26,8 @@ router.post('/api/events', jwt, authorization('creator'), RequestValidator.creat
 router.get('/api/events/:id', jwt, authorization('admin', 'creator', 'participant'), eventController.getEventById)
 router.put('/api/events/:id', jwt, authorization('admin', 'creator'), eventController.updateEvent)
 router.delete('/api/events/:id', jwt, authorization('admin', 'creator'), eventController.deleteEvent)
+
+router.get('/api/payments', jwt, authorization('admin', 'creator', 'participant'), paymentController.getPayments)
 
 
 module.exports = router
