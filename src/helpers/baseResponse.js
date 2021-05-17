@@ -1,8 +1,8 @@
 class BaseResponse {
 
-  static success(data, message) {
+  static success(data, message, success) {
     return {
-      success: true,
+      success: success ? false : true,
       message: message || 'Success retrieving data.',
       data: data
     }

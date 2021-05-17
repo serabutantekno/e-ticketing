@@ -1,5 +1,6 @@
 const { Event } = require('../db/models')
 const { BaseResponse } = require('../helpers')
+const { success } = require('../helpers/baseResponse')
 
 
 class eventController {
@@ -20,6 +21,8 @@ class eventController {
       const event = await Event.findByPk(req.params.id)
       if (event) {
         res.json(BaseResponse.success(event, 'An event with ID = ' + req.params.id + ' retrieved successfully.'))
+      } else {
+        res.json(BaseResponse.success(event, `An event with ID ${req.params.id} not found.`, 'false'))
       }
     } catch (error) {
       next(error)
@@ -47,6 +50,16 @@ class eventController {
         }
       })
       res.json(BaseResponse.success(await Event.findByPk(req.params.id), 'Event with ID = ' + req.params.id + ' updated successfully.'))
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async deleteEvent(req, res, next) {
+    try {
+      console.log('id = '+req.params.id)
+      await Event.destroy({ where: { id:req.params.id } })
+      res.json(BaseResponse.success(Event.findByPk(req.params.id), `Event with ID ${req.params.id} deleted successfylly.`))
     } catch (error) {
       next(error)
     }
