@@ -22,12 +22,11 @@ router.get('/api/users/:id', [jwt, authorization('admin')], userController.getUs
 router.put('/api/users/:id', jwt, authorization('admin'), userController.updateUserById)
 
 router.get('/api/events', jwt, eventController.getEvents)
+router.get('/api/events/payments', jwt, authorization('admin', 'creator', 'participant'), paymentController.getPayments)
 router.post('/api/events', jwt, authorization('creator'), RequestValidator.createEvent, eventController.createEvent)
 router.get('/api/events/:id', jwt, authorization('admin', 'creator', 'participant'), eventController.getEventById)
 router.put('/api/events/:id', jwt, authorization('admin', 'creator'), eventController.updateEvent)
 router.delete('/api/events/:id', jwt, authorization('admin', 'creator'), eventController.deleteEvent)
-
-router.get('/api/payments', jwt, authorization('admin', 'creator', 'participant'), paymentController.getPayments)
-
+router.post('/api/events/:id/payment', jwt, authorization('admin'), paymentController.createPayment)
 
 module.exports = router

@@ -1,7 +1,4 @@
 'use strict';
-
-const Event = require('./event')
-
 const {
   Model
 } = require('sequelize');
@@ -16,6 +13,9 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       User.hasMany(models.Event, { foreignKey: 'creator_id' })
       models.Event.belongsTo(models.User, { through: 'creator_id', foreignKey: 'id' })
+
+      User.hasMany(models.Payment, { foreignKey: 'participant_id' })
+      models.Payment.belongsTo(models.User, { through: 'participant_id', foreignKey: 'id' })
     }
   };
   User.init({
@@ -36,8 +36,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'User',
-    // underscored: true,
-    // freezeTableName: 'User',
+    tableName: 'Users',
     paranoid: true
   });
   return User;
