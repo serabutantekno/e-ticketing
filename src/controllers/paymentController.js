@@ -28,6 +28,18 @@ class paymentController {
     }
   }
 
+  static async deletePayment(req, res, next) {
+    try {
+      const currentPaymentStatus = await Payment.destroy({ where: { event_id: req.params.id, participant_id: req.params.pid } })
+      if (currentPaymentStatus) {
+        res.json(BaseResponse.success({}, `Event with ID ${req.params.id} deleted successfully.`))
+      }
+      res.json(BaseResponse.success({}, `Event with ID ${req.params.id} already deleted.`, 'false'))
+    } catch (error) {
+      next(error)
+    }
+  }
+
 }
 
 

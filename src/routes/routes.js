@@ -28,5 +28,6 @@ router.get('/api/events/:id', jwt, authorization('admin', 'creator', 'participan
 router.put('/api/events/:id', jwt, authorization('admin', 'creator'), eventController.updateEvent)
 router.delete('/api/events/:id', jwt, authorization('admin', 'creator'), eventController.deleteEvent)
 router.post('/api/events/:id/payment', jwt, authorization('admin'), paymentController.createPayment)
+router.delete('/api/events/:id/payment/:pid', jwt, authorization('admin'), paymentController.deletePayment)
 
 module.exports = router
