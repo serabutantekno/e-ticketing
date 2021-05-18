@@ -1,5 +1,4 @@
 const Joi = require('joi')
-const validateRequest = require('../helpers/requestValidator')
 
 
 class RequestValidator {
@@ -13,7 +12,6 @@ class RequestValidator {
         password: Joi.string().min(5).required(),
         role: Joi.string().valid('admin', 'creator', 'participant').required()
     })
-    // validateRequest(req, next, schema)
   }
 
   static login() {
@@ -21,13 +19,12 @@ class RequestValidator {
       username: Joi.string().required(),
       password: Joi.string().required(),
     })
-    // validateRequest(req, next, schema)
   }
 
 
   /** Event */
   static createEvent(req, res, next) {
-    const schema = Joi.object({
+    return Joi.object({
       title_event: Joi.string().required(),
       link_webinar: Joi.string().required(),
       description: Joi.string().required(),
@@ -38,7 +35,6 @@ class RequestValidator {
       event_start_date: Joi.date(),
       event_end_date: Joi.date()
     })
-    validateRequest(req, next, schema)
   }
 
 }

@@ -3,13 +3,13 @@ const { authorization, jwt, RequestValidator } = require('../middlewares')
 const express = require('express')
 const router = express.Router()
 const multer = require('multer')
-const { validateRequest, validateRequestB } = require('../helpers')
+const { validateRequest } = require('../helpers')
 const upload = multer({ dest: 'src/uploads' })
 
 
 // API Endpoints
-router.post('/api/auth/register', validateRequestB(RequestValidator.register()), registerController.register)
-router.post('/api/auth/login', validateRequestB(RequestValidator.login()), registerController.login)
+router.post('/api/auth/register', validateRequest(RequestValidator.register()), registerController.register)
+router.post('/api/auth/login', validateRequest(RequestValidator.login()), registerController.login)
 router.get('/auth/verify/:token', registerController.verify)
 
 router.get('/api/profile', jwt, authorization('admin', 'creator', 'participant'), userController.getProfile)
@@ -25,7 +25,7 @@ router.put('/api/users/:id', jwt, authorization('admin'), userController.updateU
 router.get('/api/events', jwt, eventController.getEvents)
 router.get('/api/events/payments', jwt, authorization('admin', 'creator', 'participant'), paymentController.getPayments)
 router.get('/api/events/payments/:pid', jwt, authorization('admin'), paymentController.getPaymentByID)
-router.post('/api/events', jwt, authorization('creator'), RequestValidator.createEvent, eventController.createEvent)
+router.post('/api/events', jwt, authorization('creator'), validateRequest(RequestValidator.createEvent), eventController.createEvent)
 router.get('/api/events/:id', jwt, authorization('admin', 'creator', 'participant'), eventController.getEventById)
 router.put('/api/events/:id', jwt, authorization('admin', 'creator'), eventController.updateEvent)
 router.delete('/api/events/:id', jwt, authorization('admin', 'creator'), eventController.deleteEvent)
