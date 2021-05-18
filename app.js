@@ -8,7 +8,7 @@ const routes = require('./src/routes/routes')
 
 
 app.use(express.json())
-app.use('/', routes)
+app.use('/api/v1/', routes)
 app.use((req, res, next) => {
   res.status(404).json({ message: 'not found' })
 })
