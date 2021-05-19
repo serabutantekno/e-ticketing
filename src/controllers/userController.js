@@ -37,7 +37,6 @@ class userController {
 
   static async getUsers(req, res) {
     const users = await User.findAll()
-    // console.log(users)
     if (users) {
       res.json(BaseResponse.success(TemplateData.userData(users, {hey:'ho'}), 'All user data retrieved successfully.'))
     }
@@ -62,8 +61,6 @@ class userController {
           message: 'something wrong',
           data: data
         })
-    } finally {
-      next()
     }
   }
 
