@@ -36,7 +36,12 @@ class userController {
   }
 
   static async getUsers(req, res) {
-    const users = await User.findAll()
+    let users = undefined
+    if (req.query.role) {
+      users = await User.findAll({ where: { role: req.query.role } })
+    } else {
+      users = await User.findAll()
+    }
     if (users) {
       res.json(BaseResponse.success(TemplateData.userData(users, {hey:'ho'}), 'All user data retrieved successfully.'))
     }
