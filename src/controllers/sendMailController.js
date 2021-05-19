@@ -1,17 +1,15 @@
 const nodemailer = require('nodemailer')
 
+const transport = nodemailer.createTransport({
+  host: process.env.EMAIL_VERIFICATION_HOST,
+  port: process.env.EMAIL_VERIFICATION_PORT,
+  auth: {
+    user: process.env.EMAIL_VERIFICATION_ADDRESS,
+    pass: process.env.EMAIL_VERIFICATION_PASSWORD
+  }
+})
 
-const sendMail = (email, uniqueString) => {
-  console.log(process.env.EMAIL_VERIFICATION_HOST)
-  let transport = nodemailer.createTransport({
-    host: process.env.EMAIL_VERIFICATION_HOST,
-    port: process.env.EMAIL_VERIFICATION_PORT,
-    auth: {
-      user: process.env.EMAIL_VERIFICATION_ADDRESS,
-      pass: process.env.EMAIL_VERIFICATION_PASSWORD
-    }
-  })
-
+const sendMail = ((transport, email, uniqueString) => {
   let sender = 'e-Ticketing Admin'
   let mailOptions = {
     from: sender,
@@ -27,7 +25,7 @@ const sendMail = (email, uniqueString) => {
       console.log('Message sent')
     }
   })
-}
+}).bind(this, transport)
 
 
 module.exports = sendMail
