@@ -37,6 +37,12 @@ class RequestValidator {
     })
   }
 
+  static updateEvent(req, res, next) {
+    return Joi.object({
+      creator_id: Joi.number().required()
+    })
+  }
+
 }
 
 
