@@ -29,8 +29,16 @@ router.post('/events', jwt, authorization('admin', 'creator'), validateRequest(R
 router.get('/events/:id', jwt, authorization('admin', 'creator', 'participant'), eventController.getEventById)
 router.put('/events/:id', jwt, authorization('admin', 'creator'), validateRequest(RequestValidator.updateEvent()), eventController.updateEvent)
 router.delete('/events/:id', jwt, authorization('admin', 'creator'), eventController.deleteEvent)
-router.post('/events/:id/payment', jwt, authorization('admin'), paymentController.createPayment)
+router.post('/admin/events/:id/payment', jwt, authorization('admin'), paymentController.createPaymentByAdmin)
+router.post('/events/:id/payment', jwt, authorization('participant'), paymentController.createPaymentByParticipant)
 router.put('/events/:id/payment/:pid', jwt, authorization('admin'), paymentController.updatePaymentByID)
 router.delete('/events/:id/payment/:pid', jwt, authorization('admin'), paymentController.deletePayment)
+
+router.get('/coba', (req, res) => {
+  res.json({
+    'status': 'ok'
+  })
+})
+
 
 module.exports = router

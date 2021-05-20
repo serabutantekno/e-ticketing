@@ -12,9 +12,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       User.hasMany(models.Event, { foreignKey: 'creator_id' })
-      models.Event.belongsTo(models.User, { through: 'creator_id', foreignKey: 'id' })
 
-      User.hasMany(models.Payment, { foreignKey: 'participant_id', as: 'participant' })
+      User.hasMany(models.Payment, { foreignKey: 'participant_id', as: 'payments' })
       // models.Payment.belongsTo(models.User, { through: 'participant_id', foreignKey: 'id', as: 'participant' })
     }
   };

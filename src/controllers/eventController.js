@@ -1,4 +1,4 @@
-const { Event } = require('../db/models')
+const { Event, User } = require('../db/models')
 const { BaseResponse } = require('../helpers')
 
 
@@ -25,7 +25,8 @@ class eventController {
         const events = await Event.findAll({
           where: {
             status: 'release'
-          }
+          },
+          include: User
         })
         if (events) {
           res.json(BaseResponse.success(events, 'All events retrieved successfully.'))
