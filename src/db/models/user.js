@@ -14,8 +14,8 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.Event, { foreignKey: 'creator_id' })
       models.Event.belongsTo(models.User, { through: 'creator_id', foreignKey: 'id' })
 
-      User.hasMany(models.Payment, { foreignKey: 'participant_id' })
-      models.Payment.belongsTo(models.User, { through: 'participant_id', foreignKey: 'id' })
+      User.hasMany(models.Payment, { foreignKey: 'participant_id', as: 'participant' })
+      // models.Payment.belongsTo(models.User, { through: 'participant_id', foreignKey: 'id', as: 'participant' })
     }
   };
   User.init({

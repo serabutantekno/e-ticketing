@@ -1,5 +1,6 @@
-const { Payment } = require('../db/models')
+const { Payment, User } = require('../db/models')
 const { BaseResponse } = require('../helpers')
+const sendMail = require('./sendMailController')
 
 
 class paymentController {
@@ -26,14 +27,28 @@ class paymentController {
 
   static async createPayment(req, res, next) {
     try {
-      const currentPaymentStatus = await Payment.findOne({ where: { event_id: req.params.id, participant_id: req.body.participant_id } })
+      const currentPaymentStatus = await Payment.findOne({ where: { event_id: req.params.id, participant_id: req.body.participant_id }})
       if (currentPaymentStatus) {
         return res.json(BaseResponse.success(currentPaymentStatus, `User with ID ${req.body.participant_id} already paid this event.`, 'false'))
       }
 
       const newPayment = await Payment.create(Object.assign(req.body, { event_id: req.params.id }))
+      const getNewPayment = await Payment.findOne(
+        {
+          where: {
+            participant_id: req.body.participant_id
+          },
+          include: [{
+            model: User,
+            required: true,
+            as: 'participant'
+          }]
+        }
+      )
       if (newPayment) {
-        res.json(BaseResponse.success(newPayment, 'Payment created successfully.'))
+        res.json(BaseResponse.success(newPayment, 'Payment created successfully. Please check your email to complete the payment.'))
+        /** send instruction email to complete the payment */
+        sendMail(getNewPayment.participant.email, 'emailPaymentInstruction')
       }
     } catch (error) {
       next(error)

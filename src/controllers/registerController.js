@@ -17,7 +17,7 @@ class registerController {
         Object.assign(req.body, { password: hashedPassword })
       )
       const base64data_encode = Buffer.from((data.id + ':' + data.email), 'utf8').toString('base64')
-      sendMail(data.email, base64data_encode)
+      sendMail(data.email, 'emailVerification', base64data_encode)
       res.json(BaseResponse.success(TemplateData.userData(data), 'User registered.'))
     } catch (error) {
       console.log(error)
