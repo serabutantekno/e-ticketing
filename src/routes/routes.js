@@ -5,7 +5,24 @@ const router = express.Router()
 const multer = require('multer')
 const { validateRequest } = require('../helpers')
 const upload = multer({ dest: 'src/uploads' })
+const sendMail = require('../controllers/sendMailController')
+const Queue = require('bull')
+const { createBullBoard } = require('bull-board')
+const { BullAdapter } = require('bull-board/bullAdapter')
 
+
+const testQueue = new Queue('antrian')
+testQueue.process(4, (job, done) => {
+  console.log(job)
+  sendMail(job.data.email, 'emailPaymentInstruction').then(res => done(null, res))
+  // done()
+})
+
+const { router:bullrouter, setQueues, replaceQueues } = createBullBoard([
+  new BullAdapter(testQueue)
+])
+
+router.use('/bullboard', bullrouter)
 
 // API Endpoints
 router.post('/auth/register', validateRequest(RequestValidator.register()), registerController.register)
@@ -33,6 +50,17 @@ router.post('/admin/events/:id/payment', jwt, authorization('admin'), paymentCon
 router.post('/events/:id/payment', jwt, authorization('participant'), paymentController.createPaymentByParticipant)
 router.put('/events/:id/payment/:pid', jwt, authorization('admin'), paymentController.updatePaymentByID)
 router.delete('/events/:id/payment/:pid', jwt, authorization('admin'), paymentController.deletePayment)
+
+
+
+
+router.get('/bull', (req, res) => {
+  for (let i=1; i<=10; i++) {
+    testQueue.add({'email': 'mail@domain.com'})
+  }
+
+  res.json({'status': 'oke'})
+})
 
 router.get('/coba', (req, res) => {
   res.json({

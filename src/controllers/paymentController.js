@@ -1,13 +1,41 @@
-const { Payment, User } = require("../db/models");
+const { Event, Payment, User } = require("../db/models");
 const { BaseResponse } = require("../helpers");
 const sendMail = require("./sendMailController");
 
 class paymentController {
   static async getPayments(req, res, next) {
     try {
+      let result
+      if (req.user.role === 'creator') {
+        return res.json(BaseResponse.success(await Payment.findAll({
+          include: {
+            model: Event,
+            as: 'event',
+            where: {
+              creator_id: req.user.id
+            },
+            attributes: []
+          }
+        })))
+        res.json(
+          BaseResponse.success(
+            await Payment.findAll({
+              include: {
+                model: Event,
+                as: 'event',
+                where: {
+                  creator_id: req.user.id
+                }
+              }
+            }),
+            "Payments retrieved successfully."
+          )
+        );
+      }
+
       res.json(
         BaseResponse.success(
-          await Payment.findAll(),
+          await Payment.findAll({}),
           "Payments retrieved successfully."
         )
       );

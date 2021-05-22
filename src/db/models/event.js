@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Event.belongsTo(models.User, { foreignKey: 'creator_id' })
+      Event.hasMany(models.Payment, { foreignKey:'event_id' })
     }
   };
   Event.init({
@@ -29,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Event',
+    tableName: 'Events',
     paranoid: true,
     deletedAt: 'deleted_at'
   });
