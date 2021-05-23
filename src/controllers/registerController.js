@@ -64,6 +64,26 @@ class registerController {
   }
 
 
+  static async resendEmailVerification(req, res, next) {
+    try {
+      const user = await User.findOne({
+        where: {
+          email: req.body.email
+        }
+      })
+      if ((user) && (user.role !== 'admin')) {
+        const base64data_encode = Buffer.from((user.id + ':' + user.email), 'utf8').toString('base64')
+        sendMail(user.email, 'emailVerification', base64data_encode)
+        res.status(200).json(BaseResponse.success(TemplateData.userData(user), `Resend email to ${user.email} success.`))
+      } else {
+        res.status(404).json(BaseResponse.success({}, 'Email not found. If the email is an email of an admin, please contant superuser instead.', 'false'))
+      }
+    } catch (error) {
+      next(error)
+    }
+  }
+
+
   static async login(req, res) {
     try {
       const currentUser = await User.findOne({

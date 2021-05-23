@@ -31,6 +31,8 @@ router.get('/auth/verify/:token', registerController.verify)
 
 router.post('/su/verify/user', jwt, authorization('superuser'), registerController.verifyBySuperuser)
 
+router.post('/admin/verify/user', jwt, authorization('admin'), registerController.resendEmailVerification)
+
 router.get('/profile', jwt, authorization('admin', 'creator', 'participant'), userController.getProfile)
 router.put('/profile', jwt, authorization('admin'), userController.updateProfile)
 router.post('/profile/photo', jwt, upload.single('photo'), userController.photoUpload)
