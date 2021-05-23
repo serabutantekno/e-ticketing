@@ -91,6 +91,11 @@ class registerController {
           username: req.body.username
         }
       })
+
+      if (!currentUser) {
+        return res.status(404).json(BaseResponse.success({}, 'The user doesn\'t exist.', 'false'))
+      }
+
       if (currentUser.confirmed_at) {
         if (currentUser.deleted_at) return res.json({ message: 'this account has been deleted' })
 
