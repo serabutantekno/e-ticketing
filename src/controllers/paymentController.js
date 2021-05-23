@@ -107,21 +107,13 @@ class paymentController {
   static async createPaymentByParticipant(req, res, next) {
     try {
       const currentPaymentStatus = await Payment.findOne({
-        where: { event_id: req.params.id, participant_id: req.user.id },
-        // include: [
-        //   {
-        //     model: User,
-        //     required: true,
-        //     as: "participant",
-        //   },
-        // ],
-        include: 'participant'
+        where: { event_id: req.params.id, participant_id: req.user.id }
       });
       if (currentPaymentStatus) {
         return res.json(
           BaseResponse.success(
             currentPaymentStatus,
-            `User with ID ${req.body.participant_id} already paid this event.`,
+            `User with ID ${req.body.participant_id} already buy this ticket.`,
             "false"
           )
         );
@@ -141,7 +133,7 @@ class paymentController {
           {
             model: User,
             required: true,
-            as: "participants",
+            as: "participant",
           },
         ],
       });
