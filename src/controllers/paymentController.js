@@ -5,34 +5,35 @@ const sendMail = require("./sendMailController");
 class paymentController {
   static async getPayments(req, res, next) {
     try {
-      let result
-      if (req.user.role === 'creator') {
-        return res.json(BaseResponse.success(await Payment.findAll({
-          include: {
-            model: Event,
-            as: 'event',
-            where: {
-              creator_id: req.user.id
-            },
-            attributes: []
-          }
-        })))
-        res.json(
+      let result;
+      if (req.user.role === "creator") {
+        return res.status(200).json(
           BaseResponse.success(
             await Payment.findAll({
               include: {
                 model: Event,
-                as: 'event',
+                as: "event",
                 where: {
-                  creator_id: req.user.id
-                }
-              }
-            }),
-            "Payments retrieved successfully."
+                  creator_id: req.user.id,
+                },
+                attributes: [],
+              },
+            })
           )
-        );
+        )
+      } else if (req.user.role === "participant") {
+        return res.status(200).json(
+          BaseResponse.success(
+            await Payment.findAll({
+              where: {
+                participant_id: req.user.id
+              },
+            })
+          )
+        )
       }
 
+      /** If request from admin or superuser */
       res.json(
         BaseResponse.success(
           await Payment.findAll({}),
@@ -107,7 +108,7 @@ class paymentController {
   static async createPaymentByParticipant(req, res, next) {
     try {
       const currentPaymentStatus = await Payment.findOne({
-        where: { event_id: req.params.id, participant_id: req.user.id }
+        where: { event_id: req.params.id, participant_id: req.user.id },
       });
       if (currentPaymentStatus) {
         return res.json(
