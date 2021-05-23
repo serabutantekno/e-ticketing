@@ -3,11 +3,39 @@
 const bcrypt = require('bcrypt')
 const faker = require('faker')
 
-// const salt = await bcrypt.genSalt(10)
-// const hashedPassword = await bcrypt.hash(req.body['password'], salt)
 
 const generateDummyUser = (howMany) => {
   const data = []
+
+  data.push({
+    username: 'superuser',
+    fullname: 'superuser',
+    email: 'superuser@domain.com',
+    password: bcrypt.hashSync('superuser', bcrypt.genSaltSync(10)),
+    role: 'superuser',
+    confirmed_at: new Date(),
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }, {
+    username: 'admin',
+    fullname: 'admin',
+    email: 'admin@domain.com',
+    password: bcrypt.hashSync('admin', bcrypt.genSaltSync(10)),
+    role: 'admin',
+    confirmed_at: new Date(),
+    createdAt: new Date(),
+    updatedAt: new Date()
+  }, {
+    username: 'creator',
+    fullname: 'creator',
+    email: 'creator@domain.com',
+    password: bcrypt.hashSync('creator', bcrypt.genSaltSync(10)),
+    role: 'creator',
+    confirmed_at: new Date(),
+    createdAt: new Date(),
+    updatedAt: new Date()
+  })
+
   for(let i = 0; i < howMany; i++) {
     data.push({
       username: faker.internet.userName(),
