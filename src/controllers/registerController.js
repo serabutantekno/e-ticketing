@@ -43,6 +43,27 @@ class registerController {
   }
 
 
+  static async verifyBySuperuser(req, res, next) {
+    /** Admin user verification by Superuser. */
+    try {
+      const adminUser = await User.findOne({
+        where: {
+          username: req.body.username,
+          email: req.body.email
+        }
+      })
+      if (!adminUser.confirmed_at) {
+        adminUser.update({ confirmed_at: new Date() })
+        res.status(200).json(BaseResponse.success(TemplateData.userData(adminUser), `The user with email ${adminUser.email} verified successfully.`))
+      } else {
+        res.statusCode(204)
+      }
+    } catch (error) {
+      next(error)
+    }
+  }
+
+
   static async login(req, res) {
     try {
       const currentUser = await User.findOne({

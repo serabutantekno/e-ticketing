@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     password: DataTypes.STRING,
     photo: DataTypes.STRING,
-    role: DataTypes.ENUM('admin', 'creator', 'participant'),
+    role: DataTypes.ENUM('superuser', 'admin', 'creator', 'participant'),
     deletedAt: {
       field: 'deleted_at',
       type: DataTypes.DATE

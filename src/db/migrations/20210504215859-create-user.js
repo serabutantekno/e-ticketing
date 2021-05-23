@@ -30,7 +30,7 @@ module.exports = {
       },
       role: {
         allowNull: false,
-        type: Sequelize.ENUM('admin', 'creator', 'participant')
+        type: Sequelize.ENUM('superuser', 'admin', 'creator', 'participant')
       },
       deleted_at: {
         type: Sequelize.DATE
