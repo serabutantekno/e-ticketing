@@ -7,7 +7,13 @@ class TemplateData {
       fullname: user.fullname,
       email   : user.email,
       role    : user.role,
-      photo   : Buffer.from(user.photo, 'base64').toString('utf8').split('|')[1]
+      photo   : (() => {
+        if (!user.photo) {
+          return user.photo
+        } else {
+          return Buffer.from(user.photo, 'base64').toString('utf8').split('|')[1]
+        }
+      })()
     }
   }
 
