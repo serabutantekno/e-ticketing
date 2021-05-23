@@ -64,7 +64,7 @@ router.put('/events/:id', jwt, authorization('admin', 'creator'), validateReques
 router.delete('/events/:id', jwt, authorization('admin', 'creator'), eventController.deleteEvent)
 router.post('/admin/events/:id/payment', jwt, authorization('admin'), paymentController.createPaymentByAdmin)
 router.post('/events/:id/payment', jwt, authorization('participant'), paymentController.createPaymentByParticipant)
-router.post('/events/:id/payment/:pid', jwt, authorization('participant'), paymentController.createPaymentByParticipant)
+router.post('/events/:id/payment/proof', jwt, authorization('participant'), upload.single('proof'), paymentController.paymentProof)
 // router.put('/events/:id/payment/:pid', jwt, authorization('admin'), paymentController.updatePaymentByID) ===> seharusnya fitur ini tidak dibutuhkan
 router.delete('/events/:id/payment/:pid', jwt, authorization('admin'), paymentController.deletePayment)
 

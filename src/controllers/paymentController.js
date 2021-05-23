@@ -1,8 +1,48 @@
+const cloudinary = require('cloudinary').v2
 const { Event, Payment, User } = require("../db/models");
 const { BaseResponse } = require("../helpers");
+const TemplateData = require('./templateData')
 const sendMail = require("./sendMailController");
 
 class paymentController {
+
+  static async paymentProof(req, res, next) {
+    try {
+      const upload = await cloudinary.uploader.upload(req.file.path)
+      console.log(upload)
+      console.log(req.user)
+      const currentPayment = await Payment.findOne({
+        where: {
+          event_id: req.params.id,
+          participant_id: req.user.id
+        }
+      })
+      if (currentPayment.payment_slip) {
+        const [public_id] = Buffer.from(currentPayment.payment_slip, 'base64').toString('utf8').split('|')
+        await cloudinary.uploader.destroy(public_id)
+      }
+      const base64data_encode = Buffer.from((upload.public_id + '|' + upload.secure_url), 'utf8').toString('base64')
+      const update = await currentPayment.update({ payment_slip: base64data_encode })
+      if(update) {
+        const payment = await Payment.findOne({
+          where: {
+            event_id: req.params.id,
+            participant_id: req.user.id
+          },
+          include: {
+            model: User,
+            as: 'participant',
+            attributes: ['username', 'fullname', 'email']
+          }
+          // attributes: ['fullname']
+        })
+        res.status(200).json(BaseResponse.success(payment, 'Payment slip uploaded.'))
+      }
+    } catch (error) {
+      next(error)
+    }
+  }
+
   static async getPayments(req, res, next) {
     try {
       let result;
