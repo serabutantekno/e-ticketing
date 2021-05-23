@@ -29,7 +29,7 @@ router.post('/auth/register', validateRequest(RequestValidator.register()), regi
 router.post('/auth/login', validateRequest(RequestValidator.login()), registerController.login)
 router.get('/auth/verify/:token', registerController.verify)
 
-router.post('/admin/verify/user', jwt, authorization('superuser'), registerController.verifyBySuperuser)
+router.post('/su/verify/user', jwt, authorization('superuser'), registerController.verifyBySuperuser)
 
 router.get('/profile', jwt, authorization('admin', 'creator', 'participant'), userController.getProfile)
 router.put('/profile', jwt, authorization('admin'), userController.updateProfile)
