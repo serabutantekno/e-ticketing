@@ -17,7 +17,9 @@ class registerController {
         Object.assign(req.body, { password: hashedPassword })
       )
       const base64data_encode = Buffer.from((data.id + ':' + data.email), 'utf8').toString('base64')
-      sendMail(data.email, 'emailVerification', base64data_encode)
+      if (req.body.role !== 'admin') {
+        sendMail(data.email, 'emailVerification', base64data_encode)
+      }
       res.json(BaseResponse.success(TemplateData.userData(data), 'User registered.'))
     } catch (error) {
       console.log(error)
@@ -48,7 +50,7 @@ class registerController {
           username: req.body.username
         }
       })
-      if (currentUser.confirmed_at || currentUser.role === 'admin') {
+      if (currentUser.confirmed_at) {
         if (currentUser.deleted_at) return res.json({ message: 'this account has been deleted' })
 
         const passwordCheck = await bcrypt.compare(req.body.password, currentUser.password)
