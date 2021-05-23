@@ -1,10 +1,22 @@
+const path = require('path')
 const { registerController, userController, eventController, paymentController } = require('../controllers')
 const { authorization, jwt, RequestValidator } = require('../middlewares')
 const express = require('express')
 const router = express.Router()
 const multer = require('multer')
 const { validateRequest } = require('../helpers')
-const upload = multer({ dest: 'src/uploads' })
+// const upload = multer({ dest: 'src/uploads' })
+const upload = multer({
+  storage: multer.diskStorage({}),
+  fileFilter: (req, file, cb) => {
+    let ext = path.extname(file.originalname)
+    if (ext !== ".jpg" && ext !== ".jpeg" && ext !== ".png") {
+      cb(new Error("File type is not supported."), false)
+      return
+    }
+    cb(null, true)
+  }
+})
 const sendMail = require('../controllers/sendMailController')
 const Queue = require('bull')
 const { createBullBoard } = require('bull-board')
@@ -52,7 +64,8 @@ router.put('/events/:id', jwt, authorization('admin', 'creator'), validateReques
 router.delete('/events/:id', jwt, authorization('admin', 'creator'), eventController.deleteEvent)
 router.post('/admin/events/:id/payment', jwt, authorization('admin'), paymentController.createPaymentByAdmin)
 router.post('/events/:id/payment', jwt, authorization('participant'), paymentController.createPaymentByParticipant)
-router.put('/events/:id/payment/:pid', jwt, authorization('admin'), paymentController.updatePaymentByID)
+router.post('/events/:id/payment/:pid', jwt, authorization('participant'), paymentController.createPaymentByParticipant)
+// router.put('/events/:id/payment/:pid', jwt, authorization('admin'), paymentController.updatePaymentByID) ===> seharusnya fitur ini tidak dibutuhkan
 router.delete('/events/:id/payment/:pid', jwt, authorization('admin'), paymentController.deletePayment)
 
 

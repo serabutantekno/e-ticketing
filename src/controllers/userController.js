@@ -1,3 +1,4 @@
+const cloudinary = require('cloudinary').v2
 const { User } = require('../db/models')
 const { BaseResponse } = require('../helpers')
 const TemplateData = require('./templateData')
@@ -6,7 +7,14 @@ const TemplateData = require('./templateData')
 class userController {
 
   static async photoUpload(req, res) {
-    const update = await User.update({ photo: req.file.filename }, {
+    const upload = await cloudinary.uploader.upload(req.file.path)
+    const currentUser = await User.findByPk(req.user.id)
+    if (currentUser.photo) {
+      const [public_id] = Buffer.from(currentUser.photo, 'base64').toString('utf8').split('|')
+      await cloudinary.uploader.destroy(public_id)
+    }
+    const base64data_encode = Buffer.from((upload.public_id + '|' + upload.secure_url), 'utf8').toString('base64')
+    const update = await User.update({ photo: base64data_encode }, {
       where: {
         id: req.user.id
       }

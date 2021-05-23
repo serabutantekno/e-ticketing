@@ -6,7 +6,8 @@ class TemplateData {
       username: user.username,
       fullname: user.fullname,
       email   : user.email,
-      role    : user.role
+      role    : user.role,
+      photo   : Buffer.from(user.photo, 'base64').toString('utf8').split('|')[1]
     }
   }
 
