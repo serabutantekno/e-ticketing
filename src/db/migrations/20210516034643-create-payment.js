@@ -31,7 +31,8 @@ module.exports = {
         type: Sequelize.STRING
       },
       payment_status: {
-        type: Sequelize.ENUM('unpaid', 'paid')
+        allowNull: true,
+        type: Sequelize.ENUM('pending', 'passed', 'failed')
       },
       deleted_at: {
         type: Sequelize.DATE

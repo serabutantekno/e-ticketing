@@ -58,11 +58,11 @@ router.put('/users/:id', jwt, authorization('admin'), userController.updateUserB
 router.get('/events', jwt, eventController.getEvents)
 router.get('/events/payments', jwt, authorization('admin', 'creator', 'participant'), paymentController.getPayments)
 router.get('/events/payments/:pid', jwt, authorization('admin'), paymentController.getPaymentByID)
+router.post('/admin/payments/:pid', jwt, authorization('admin'), paymentController.verifyPayment)
 router.post('/events', jwt, authorization('admin', 'creator'), validateRequest(RequestValidator.createEvent()), eventController.createEvent)
 router.get('/events/:id', jwt, authorization('admin', 'creator', 'participant'), eventController.getEventById)
 router.put('/events/:id', jwt, authorization('admin', 'creator'), validateRequest(RequestValidator.updateEvent()), eventController.updateEvent)
 router.delete('/events/:id', jwt, authorization('admin', 'creator'), eventController.deleteEvent)
-router.post('/admin/events/:id/payment', jwt, authorization('admin'), paymentController.createPaymentByAdmin)
 router.post('/events/:id/payment', jwt, authorization('participant'), paymentController.createPaymentByParticipant)
 router.post('/events/:id/payment/proof', jwt, authorization('participant'), upload.single('proof'), paymentController.paymentProof)
 // router.put('/events/:id/payment/:pid', jwt, authorization('admin'), paymentController.updatePaymentByID) ===> seharusnya fitur ini tidak dibutuhkan

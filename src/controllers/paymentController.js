@@ -43,6 +43,46 @@ class paymentController {
     }
   }
 
+  static async verifyPayment(req, res, next) {
+    try {
+      const payment_status = ['pending', 'passed', 'failed']
+      if (!payment_status.includes(req.body.payment_status)) {
+        res.status(400).json(BaseResponse.success({}, 'Invalid payment status.', 'failed'))
+      } else {
+        await Payment.update({
+          'payment_status': req.body.payment_status
+        },
+        {
+          where: {
+            id: req.params.pid
+          }
+        })
+        let emailType
+        if (req.body.payment_status === 'pending') {
+          emailType = 'emailPaymentPending'
+        } else if (req.body.payment_status === 'failed') {
+          emailType = 'emailPaymentFailed'
+        } else if (req.body.payment_status === 'passed') {
+          emailType = 'emailPaymentPassed'
+        }
+        const currentPayment = await Payment.findOne({
+          where: {
+            id: req.params.pid
+          },
+          include: {
+            model: User,
+            as: 'participant',
+            attributes: ['username', 'fullname', 'email']
+          }
+        })
+        sendMail(currentPayment.participant.email, emailType)
+        res.status(200).json(BaseResponse.success(currentPayment, `Payment status changed to ${currentPayment.payment_status}.`))
+      }
+    } catch (error) {
+      next(error)
+    }
+  }
+
   static async getPayments(req, res, next) {
     try {
       let result;

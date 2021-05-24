@@ -29,6 +29,33 @@ class emailBody {
       html: `Please send some amount of money to this number: 033112139123`,
     };
   }
+
+  static emailPaymentPending(email) {
+    return {
+      from: "e-Ticketing Admin",
+      to: email,
+      subject: "The payment slip you've submitted will be checked by admin soon.",
+      html: `Thank you for purchasing the ticket. We'll inform you if the payment slip is valid.`,
+    }
+  }
+
+  static emailPaymentPassed(email) {
+    return {
+      from: "e-Ticketing Admin",
+      to: email,
+      subject: "The payment you made has been verified.",
+      html: `Thank you for purchasing the ticket.`,
+    }
+  }
+
+  static emailPaymentFailed(email) {
+    return {
+      from: "e-Ticketing Admin",
+      to: email,
+      subject: "Your submitted payment proof couldn't be processed.",
+      html: `Please send some amount of money to this number: 033112139123`,
+    }
+  }
 }
 
 /** nodemailer controller */
@@ -66,6 +93,15 @@ const sendMail = (email, mailType, uniqueString) => {
       case "emailPaymentInstruction":
         mailOptions = emailBody.emailPaymentInstruction(email);
         break;
+      case "emailPaymentPending":
+        mailOptions = emailBody.emailPaymentPending(email)
+        break
+      case "emailPaymentPassed":
+        mailOptions = emailBody.emailPaymentPassed(email)
+        break
+      case "emailPaymentFailed":
+        mailOptions = emailBody.emailPaymentFailed(email)
+        break
     }
   }
   return transport.sendMail(mailOptions)

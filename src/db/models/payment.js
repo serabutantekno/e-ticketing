@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     event_id: DataTypes.INTEGER,
     amount: DataTypes.FLOAT,
     payment_slip: DataTypes.STRING,
-    payment_status: DataTypes.ENUM('unpaid', 'paid'),
+    payment_status: DataTypes.ENUM('pending', 'passed', 'failed'),
     deleted_at: DataTypes.DATE
   }, {
     sequelize,
