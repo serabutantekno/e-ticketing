@@ -56,6 +56,7 @@ router.get('/users/:id', [jwt, authorization('admin')], userController.getUserBy
 router.put('/users/:id', jwt, authorization('admin'), userController.updateUserById)
 
 router.get('/events', jwt, eventController.getEvents)
+router.get('/events/done', jwt, authorization('creator'), eventController.getCreatorDoneEvents)
 router.get('/events/payments', jwt, authorization('admin', 'creator', 'participant'), paymentController.getPayments)
 router.get('/events/payments/:pid', jwt, authorization('admin'), paymentController.getPaymentByID)
 router.post('/admin/payments/:pid', jwt, authorization('admin'), paymentController.verifyPayment)
