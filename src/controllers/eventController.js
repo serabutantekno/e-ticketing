@@ -41,34 +41,15 @@ class eventController {
 
   static async getCreatorDoneEvents(req, res, next) {
     try {
-      // const query = `SELECT e.title_event, e.link_webinar, e.description, e.banner, e.price, e.quantity, e.status, e.event_start_date, e.event_end_date FROM Events e WHERE e.creator_id = ${req.user.id} AND e.status = 'release' AND e.event_end_date < CURRENT_TIMESTAMP()`
-      const query = `SELECT e.id AS event_id, p.id AS payment_id, u.id, u.username, u.email, e.title_event, e.link_webinar, e.description, e.banner, e.price, e.quantity, e.status, e.event_start_date, e.event_end_date
-      FROM Events e
-      JOIN Payments p ON e.id = p.event_id
-      JOIN Users u ON p.participant_id = u.id
-      WHERE e.creator_id = 211 AND e.status = 'release' AND e.event_end_date < CURRENT_TIMESTAMP()
-      GROUP BY e.id, p.id`
+      const query = `SELECT e.id AS event_id, e.title_event, e.description, COUNT(p.participant_id) AS total_participant, SUM(p.amount) as total_amount, u.fullname AS creator
+      FROM Users u
+      INNER JOIN Events e ON e.creator_id = u.id
+      INNER JOIN Payments p ON p.event_id = e.id
+      GROUP BY e.id
+      ORDER BY total_amount DESC, total_participant DESC`
       const [results, metadata] = await db.sequelize.query(query)
-      console.log('hasil: ====================')
-      console.log(results)
       const result = JSON.parse(JSON.stringify(results[0]))
-
-      /** remove these properties */
-      delete result.id
-      delete result.username
-      delete result.email
-
-      const participants = results.map(x => {
-        return {
-          id: x.id,
-          username: x.username,
-          email: x.email
-        }
-      })
-      res.status(200).json(BaseResponse.success(Object.assign({
-        participants: participants,
-        participants_count: participants.length
-      }, result), 'Retrieving finished events.'))
+      res.status(200).json(BaseResponse.success(result))
     } catch (error) {
       next(error)
     }
