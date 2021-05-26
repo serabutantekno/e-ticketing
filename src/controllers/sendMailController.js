@@ -21,6 +21,15 @@ class emailBody {
     };
   }
 
+  static emailPaymentInstruction24H(email) {
+    return {
+      from: "e-Ticketing Admin",
+      to: email,
+      subject: "Payment Instruction",
+      html: `Please send some amount of money to this number: 033112139123 within 24 hours`,
+    };
+  }
+
   static emailPaymentInstruction(email) {
     return {
       from: "e-Ticketing Admin",
@@ -87,6 +96,9 @@ const sendMail = (email, mailType, uniqueString) => {
   let mailOptions;
   if (mailType) {
     switch (mailType) {
+      case "emailPaymentInstruction24H":
+        mailOptions = emailBody.emailPaymentInstruction24H(email)
+        break
       case "emailVerification":
         mailOptions = emailBody.emailVerification(email, uniqueString);
         break;
@@ -105,15 +117,6 @@ const sendMail = (email, mailType, uniqueString) => {
     }
   }
   return transport.sendMail(mailOptions)
-  console.log(mailOptions);
-
-  return transport.sendMail(mailOptions, (error, response) => {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log("Message sent");
-    }
-  });
 };
 
 
